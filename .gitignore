@@ -1,0 +1,25 @@
+# dbt
+target/
+dbt_packages/
+logs/
+dbt_test_local/
+
+# python
+env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# duckdb
+*.duckdb
+*.duckdb.wal
+
+# environments
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "ステージングされた注文データ。"
+    columns:
+      - name: order_id
+        description: "注文の主キー（Primary Key）"
+        tests:
+          - unique     # 重複がないこと
+          - not_null   # NULLが含まれていないこと
+
+      - name: customer_id
+        description: "顧客ID（Foreign Key）"
+        tests:
+          - not_null
+          # 実務でよく使う「外部キー制約」のテスト
+          # - relationships:
+          #     to: ref('stg_customers')
+          #     field: customer_id
+
+      - name: status
+        description: "注文ステータス"
+        tests:
+          # 実務でよく使う「許容される値」のテスト
+          - accepted_values:
+              values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
