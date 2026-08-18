@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 8; ry: 8; }
+      .box-dbt { fill: #ffffff; stroke: #ff6b6b; stroke-width: 2; stroke-dasharray: 8 4; rx: 12; ry: 12; }
+      .box-model { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 2; rx: 6; ry: 6; }
+      .box-test { fill: #f0fdf4; stroke: #4ade80; stroke-width: 2; rx: 30; ry: 30; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; font-weight: bold; fill: #334155; text-anchor: middle; }
+      .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; font-weight: 500; fill: #64748b; text-anchor: middle; }
+      .arrow { stroke: #94a3b8; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .arrow-dash { stroke: #94a3b8; stroke-width: 2; fill: none; stroke-dasharray: 5,5; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect class="bg" width="100%" height="100%" />
+
+  <!-- dbt Project Boundary -->
+  <rect class="box-dbt" x="200" y="50" width="400" height="300" />
+  <rect x="250" y="30" width="300" height="40" fill="#ff6b6b" rx="20" />
+  <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" x="400" y="56" text-anchor="middle">dbt プロジェクト内の処理</text>
+
+  <!-- Raw Data (Cylinder) -->
+  <path d="M 50 130 C 50 115, 150 115, 150 130 L 150 190 C 150 205, 50 205, 50 190 Z" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2" />
+  <path d="M 50 130 C 50 145, 150 145, 150 130" fill="none" stroke="#38bdf8" stroke-width="2" />
+  <text class="title" x="100" y="165">生データ</text>
+  <text class="subtitle" x="100" y="185">(Raw Data)</text>
+
+  <!-- Staging Models -->
+  <rect class="box-model" x="240" y="120" width="120" height="80" />
+  <text class="title" x="300" y="160">Staging モデル</text>
+  <text class="subtitle" x="300" y="180">(基礎的な整形)</text>
+
+  <!-- Mart Models -->
+  <rect class="box-model" x="440" y="120" width="120" height="80" />
+  <text class="title" x="500" y="160">Mart モデル</text>
+  <text class="subtitle" x="500" y="180">(結合・集計)</text>
+
+  <!-- Tests & Docs (Pill shape) -->
+  <rect class="box-test" x="330" y="240" width="140" height="60" />
+  <text class="title" style="fill:#166534;" x="400" y="270">自動テスト</text>
+  <text class="subtitle" style="fill:#15803d;" x="400" y="290">＆ ドキュメント生成</text>
+
+  <!-- Final Data (Cylinder) -->
+  <path d="M 650 130 C 650 115, 750 115, 750 130 L 750 190 C 750 205, 650 205, 650 190 Z" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2" />
+  <path d="M 650 130 C 650 145, 750 145, 750 130" fill="none" stroke="#38bdf8" stroke-width="2" />
+  <text class="title" x="700" y="165">最終データ</text>
+  <text class="subtitle" x="700" y="185">(テーブル/ビュー)</text>
+
+  <!-- Arrows Main Flow -->
+  <path class="arrow" d="M 155 160 L 235 160" />
+  <path class="arrow" d="M 365 160 L 435 160" />
+  <path class="arrow" d="M 565 160 L 645 160" />
+
+  <!-- Arrows Tests -->
+  <path class="arrow-dash" d="M 300 205 L 350 235" />
+  <path class="arrow-dash" d="M 500 205 L 450 235" />
+</svg>

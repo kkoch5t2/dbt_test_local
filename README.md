@@ -35,11 +35,11 @@ Stagingで綺麗にしたデータを使って、分析用の最終的なデー�
 
 ### このプロジェクトのデータフロー
 
-![このプロジェクトのデータフロー](docs/local_project_flow.jpg)
+![このプロジェクトのデータフロー](docs/local_project_flow.svg)
 
 ### 実務での一般的な構成（モダンデータスタック）
 
-![実務でのモダンデータスタック構成](docs/modern_data_stack.jpg)
+![実務でのモダンデータスタック構成](docs/modern_data_stack.svg)
 
 ---
 

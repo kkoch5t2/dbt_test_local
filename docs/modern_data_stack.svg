@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 400" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; font-weight: bold; fill: #334155; text-anchor: middle; }
+      .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; font-weight: 500; fill: #64748b; text-anchor: middle; }
+      .dbt-text { fill: #ea580c; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .arrow { stroke: #94a3b8; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .arrow-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: bold; fill: #475569; text-anchor: middle; }
+    </style>
+    <!-- Smaller, sleeker arrowhead -->
+    <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <rect class="bg" width="100%" height="100%" />
+
+  <!-- ========================================== -->
+  <!-- 1. DATA SOURCES (Centered on Y=200)        -->
+  <!-- ========================================== -->
+  <g id="data-sources">
+    <!-- Base Fill -->
+    <rect x="30" y="80" width="130" height="240" fill="#ffffff" rx="8" />
+    <!-- Header Background (Top rounded corners only) -->
+    <path d="M 30 88 A 8 8 0 0 1 38 80 L 152 80 A 8 8 0 0 1 160 88 L 160 140 L 30 140 Z" fill="#f1f5f9" />
+    <!-- Border (Drawn on top to prevent overlap) -->
+    <rect x="30" y="80" width="130" height="240" fill="none" stroke="#cbd5e1" stroke-width="2" rx="8" />
+    
+    <!-- E Badge inside header -->
+    <rect x="45" y="90" width="100" height="24" fill="#3b82f6" rx="12" />
+    <text x="95" y="106" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">
+      <tspan font-weight="bold" font-size="14px">E</tspan>
+      <tspan font-weight="normal" font-size="12px"> (抽出)</tspan>
+    </text>
+    <text class="title" x="95" y="132">データソース</text>
+    
+    <!-- Inner Items -->
+    <rect x="50" y="160" width="90" height="30" fill="#e2e8f0" rx="4" />
+    <text class="subtitle" style="fill:#334155;" x="95" y="180">業務DB</text>
+    
+    <rect x="50" y="205" width="90" height="30" fill="#e2e8f0" rx="4" />
+    <text class="subtitle" style="fill:#334155;" x="95" y="225">SaaS / API</text>
+    
+    <rect x="50" y="250" width="90" height="30" fill="#e2e8f0" rx="4" />
+    <text class="subtitle" style="fill:#334155;" x="95" y="270">ファイル</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 2. DATA WAREHOUSE (Centered on Y=200)      -->
+  <!-- ========================================== -->
+  <g id="dwh">
+    <!-- Base Fill -->
+    <rect x="280" y="50" width="300" height="300" fill="#ffffff" rx="12" />
+    <!-- Header Background (Top rounded corners only) -->
+    <path d="M 280 62 A 12 12 0 0 1 292 50 L 568 50 A 12 12 0 0 1 580 62 L 580 105 L 280 105 Z" fill="#e0f2fe" />
+    <!-- Border -->
+    <rect x="280" y="50" width="300" height="300" fill="none" stroke="#38bdf8" stroke-width="2" rx="12" />
+    
+    <text class="title" style="fill:#0284c7;" x="430" y="75">データウェアハウス</text>
+    <text class="subtitle" style="fill:#0284c7;" x="430" y="95">(Snowflake, BigQuery等)</text>
+
+    <!-- Raw Data Cylinder (Centered around Y=227 in white area) -->
+    <!-- L Badge -->
+    <rect x="292.5" y="140" width="80" height="24" fill="#10b981" rx="12" />
+    <text x="332.5" y="156" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">
+      <tspan font-weight="bold" font-size="14px">L</tspan>
+      <tspan font-weight="normal" font-size="12px"> (格納)</tspan>
+    </text>
+
+    <path d="M 295 177 C 295 167, 370 167, 370 177 L 370 257 C 370 267, 295 267, 295 257 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+    <path d="M 295 177 C 295 187, 370 187, 370 177" fill="none" stroke="#cbd5e1" stroke-width="2" />
+    <text class="title" x="332.5" y="222">生データ</text>
+
+    <!-- dbt Box (Centered around Y=227 in white area) -->
+    <rect x="425" y="135" width="140" height="185" fill="#fff7ed" stroke="#ea580c" stroke-width="2" rx="8" stroke-dasharray="6 4" />
+    
+    <!-- T Badge -->
+    <rect x="445" y="145" width="100" height="24" fill="#ea580c" rx="12" />
+    <text x="495" y="161" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">
+      <tspan font-weight="bold" font-size="14px">T</tspan>
+      <tspan font-weight="normal" font-size="12px"> (変換)</tspan>
+    </text>
+
+    <text class="dbt-text" x="495" y="200">dbt</text>
+    <!-- Bullet points left-aligned -->
+    <text class="subtitle" style="fill:#ea580c; text-anchor:start;" x="450" y="230">・クレンジング</text>
+    <text class="subtitle" style="fill:#ea580c; text-anchor:start;" x="450" y="250">・結合・集計</text>
+    <text class="subtitle" style="fill:#ea580c; text-anchor:start;" x="450" y="270">・テスト・文書</text>
+    <text class="subtitle" style="fill:#ea580c; text-anchor:start;" x="450" y="290">・CI/CDデプロイ</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 3. DATA CONSUMPTION (Centered on Y=200)    -->
+  <!-- ========================================== -->
+  <g id="bi">
+    <!-- Base Fill -->
+    <rect x="690" y="80" width="130" height="240" fill="#ffffff" rx="8" />
+    <!-- Header Background -->
+    <path d="M 690 88 A 8 8 0 0 1 698 80 L 812 80 A 8 8 0 0 1 820 88 L 820 130 L 690 130 Z" fill="#f1f5f9" />
+    <!-- Border -->
+    <rect x="690" y="80" width="130" height="240" fill="none" stroke="#cbd5e1" stroke-width="2" rx="8" />
+    
+    <text class="title" x="755" y="112">データ活用</text>
+    
+    <rect x="710" y="160" width="90" height="30" fill="#e2e8f0" rx="4" />
+    <text class="subtitle" style="fill:#334155;" x="755" y="180">BIツール</text>
+    
+    <rect x="710" y="205" width="90" height="30" fill="#e2e8f0" rx="4" />
+    <text class="subtitle" style="fill:#334155;" x="755" y="225">機械学習</text>
+    
+    <rect x="710" y="250" width="90" height="30" fill="#e2e8f0" rx="4" />
+    <text class="subtitle" style="fill:#334155;" x="755" y="270">レポート</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 4. ARROWS (Perfectly on Y=200 axis)        -->
+  <!-- ========================================== -->
+  <!-- Sources to DWH -->
+  <path class="arrow" d="M 170 200 L 265 200" />
+  <text class="arrow-label" x="217.5" y="180">データ連携</text>
+  <text class="subtitle" style="font-size:10px;" x="217.5" y="222">(Fivetran / Airbyte)</text>
+
+  <!-- Raw to dbt (shifted to Y=227 for the inner alignment) -->
+  <path class="arrow" d="M 380 227 L 415 227" />
+
+  <!-- dbt to BI -->
+  <path class="arrow" d="M 590 200 L 675 200" />
+  <text class="arrow-label" x="632.5" y="185">分析用データ</text>
+
+</svg>
