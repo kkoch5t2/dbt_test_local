@@ -101,20 +101,20 @@ dbt debug
 ```bash
 # dbt_test_local/dbt_test_local/ にいる状態で実行してください
 
-# staging/marts モデルをコピー
-cp -r ../models/staging models/
-cp -r ../models/marts models/
-
-# 個別テストをコピー
-cp ../tests/assert_total_amount_is_positive.sql tests/
+# 各フォルダの中身をまとめてコピー
+cp -r ../models/* models/
+cp -r ../tests/* tests/
+cp -r ../seeds/* seeds/
+cp ../packages.yml ./
 ```
 
 ※ Windows の PowerShell の場合は以下のコマンドを使用してください
 
 ```powershell
-Copy-Item -Path ..\models\staging -Destination models\staging -Recurse
-Copy-Item -Path ..\models\marts -Destination models\marts -Recurse
-Copy-Item -Path ..\tests\assert_total_amount_is_positive.sql -Destination tests\
+Copy-Item -Path ..\models\* -Destination models\ -Recurse -Force
+Copy-Item -Path ..\tests\* -Destination tests\ -Recurse -Force
+Copy-Item -Path ..\seeds\* -Destination seeds\ -Recurse -Force
+Copy-Item -Path ..\packages.yml -Destination .\ -Force
 ```
 
 コピー後、`dbt run` を実行すると `stg_orders` や `fct_monthly_revenue` も含めた全モデルが実行されるようになります。
@@ -122,41 +122,144 @@ Copy-Item -Path ..\tests\assert_total_amount_is_positive.sql -Destination tests\
 ---
 
 
-## dbtの基本的な使い方（チュートリアル）
+## dbtの実務でよく使うコマンド一覧（チュートリアル）
 
-dbt環境がセットアップされている場合、以下のコマンドで動作を確認できます。
+ローカルの `dbt_test_local/dbt_test_local` フォルダ（プロジェクトルート）に移動した状態で、以下の順にコマンドを試してみてください。実務でよく使われる流れを体験できます。
 
-### Step 1: モデルの実行（テーブル/ビューの作成）
+### 📊 dbtコマンドの全体像（視覚化）
+それぞれのコマンドが「いつ・どこで」使われるかを表した図です。
+
+```mermaid
+flowchart LR
+    classDef cmd fill:#ff9900,stroke:#333,stroke-width:2px,color:#000,font-weight:bold;
+    classDef data fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef db fill:#c8e6c9,stroke:#388e3c,stroke-width:2px;
+
+    %% 準備
+    PKG[packages.yml] -->|1. dbt deps| MACROS[外部パッケージ]
+    
+    %% データの流れ (実行フェーズ)
+    CSV[CSVファイル] -->|2. dbt seed| RAW[(RAWテーブル)]
+    RAW -->|3. dbt run| STG[(Stagingモデル)]
+    STG -->|3. dbt run| MART[(Martsモデル)]
+    
+    %% 各モデルからの派生アクション
+    STG -.->|4. dbt show| PREVIEW[ターミナル\nプレビュー]
+    
+    %% テスト
+    STG -->|5. dbt test| TEST{データ\n品質テスト}
+    MART -->|5. dbt test| TEST
+    
+    %% ドキュメント生成
+    MART -.->|7. dbt docs| DOCS[仕様書・\n関係図 HTML]
+
+    %% 全体実行
+    BUILD(((💡 6. dbt build : 2〜5の構築・テストを一括実行)))
+
+    class PKG,CSV,PREVIEW,DOCS data;
+    class RAW,STG,MART db;
+```
+### 1. dbt deps （外部パッケージの導入）
+```bash
+dbt deps
+```
+`packages.yml` に定義された外部パッケージ（`dbt_utils` など）をインストールします。実務ではリポジトリをcloneしてきた直後などに実行します。
+
+```mermaid
+flowchart LR
+    A[packages.yml] -->|ダウンロード| B[外部パッケージ]
+```
+### 2. dbt seed （CSVからテーブル作成）
+```bash
+dbt seed
+```
+`seeds/` ディレクトリにあるCSVファイル（今回は `raw_customers.csv`）を読み込み、データベースにテーブルとしてロードします。マスタデータの管理によく使います。
+
+```mermaid
+flowchart LR
+    A[CSVファイル] -->|データ投入| B[(データベース RAWテーブル)]
+```
+### 3. dbt run （モデルの実行）
 ```bash
 dbt run
 ```
-依存関係（`ref`）を自動的に解決し、正しい順番でSQLを実行してデータベース上にテーブルやビューを作成します。
+プロジェクト内のすべてのモデルを実行し、データベース上にテーブルやビューを作成します。
+※特定のモデルだけを実行したい場合は `dbt run -s stg_customers` のように `-s`（`--select`）オプションを使います。後ろに `+` をつけると「それに依存している下流モデルすべて」も実行されます。
 
-### Step 2: テストの実行
+```mermaid
+flowchart LR
+    A[SELECT文 SQL] -->|テーブル・ビュー化| B[(データベース)]
+```
+### 4. dbt show （データプレビュー）
+```bash
+dbt show -s stg_customers
+```
+モデルの実行結果（先頭数行）をターミナルでプレビューします。（※モデルやテストがDB上のテーブルを参照するため、初回は `dbt run` の後に実行すると確実です）
+
+```mermaid
+flowchart LR
+    A[SELECT文 SQL] -->|データ取得| B[ターミナル プレビュー]
+```
+### 5. dbt test （テストの実行）
 ```bash
 dbt test
 ```
-`schema.yml` に記載した汎用テストと、`tests/` ディレクトリ内の個別テストをすべて実行し、データ品質をチェックします。
+`schema.yml` に記載した汎用テスト（`unique`, `not_null`, `relationships`）や、`tests/` フォルダの個別テストを実行し、データ品質をチェックします。
 
+```mermaid
+flowchart LR
+    A[テスト設定 yml/sql] -->|品質チェック| B{PASS / FAIL}
+```
 #### 🛠️ チュートリアル：わざと失敗するテストを直してみよう
 
 初回実行時、`dbt test` を実行するとわざと **1件のエラー（FAIL）** が出ます（データの異常を検知するテスト機能を体験するためです）。
 
 * エラーを直す手順（dbt公式が用意したフィルターを使う方法）
-  1. `models/example/my_first_dbt_model.sql` をエディタで開きます。
+  1. `dbt_test_local\dbt_test_local\models\example\my_first_dbt_model.sql` をエディタで開きます。
   2. 一番最後の行にある `-- where id is not null` という部分のコメントアウト（`-- `）を削除し、有効化します。
-  3. 再度 `dbt run` を実行し、修正したデータを作り直します。
-  4. 再度 `dbt test` を実行します。今度はすべて緑色の `PASS` になるはずです！
+  3. 再度以下のコマンドを実行し、修正したデータを作り直します。
+     ```bash
+     dbt run
+     ```
+  4. 最後に以下のコマンドでテストを再実行します。今度はすべて緑色の `PASS` になるはずです！
+     ```bash
+     dbt test
+     ```
+### 6. dbt build （構築とテストの一括実行）
+```bash
+dbt build
+```
+上記の `seed`, `run`, `test` などを依存関係の順序に従って一度に行います。途中でテストが失敗すると下流の実行をスキップしてくれるため、安全で、実務では最もよく使われます。
 
-### Step 3: ドキュメントとリネージ（依存関係グラフ）の生成
+```mermaid
+flowchart LR
+    A((seed)) -->|一括実行| B((run)) -->|一括実行| C((test))
+```
+### 7. dbt docs generate & serve （ドキュメントの生成）
 ```bash
 dbt docs generate
 dbt docs serve
 ```
 プロジェクトのドキュメントを生成し、ブラウザで閲覧できます。モデル間の繋がりを可視化したグラフ（リネージグラフ）も確認できます。
+※終了するにはターミナルで `Ctrl + C` を押します。
 
+```mermaid
+flowchart LR
+    A[各種設定やコード] -->|HTML生成| B[ブラウザ カタログサイト]
+```
 > 💡 **ポートエラー（WinError 10013など）が出た場合**
 > 他のアプリがポートを使用中でエラーになる場合は、ポート番号を変更して実行してください。
 > ```bash
 > dbt docs serve --port 8081
 > ```
+
+### 8. dbt clean （クリーンアップ）
+```bash
+dbt clean
+```
+`target/` フォルダなどの生成物を削除して綺麗にします。キャッシュがおかしい時などに使います。
+
+```mermaid
+flowchart LR
+    A[target/ 等の生成物] -->|削除| B(((🗑️)))
+```

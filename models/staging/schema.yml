@@ -15,9 +15,9 @@ models:
         tests:
           - not_null
           # 実務でよく使う「外部キー制約」のテスト
-          # - relationships:
-          #     to: ref('stg_customers')
-          #     field: customer_id
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
 
       - name: status
         description: "注文ステータス"
@@ -25,3 +25,11 @@ models:
           # 実務でよく使う「許容される値」のテスト
           - accepted_values:
               values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+
+  - name: stg_customers
+    description: "顧客マスタデータのステージング。"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
