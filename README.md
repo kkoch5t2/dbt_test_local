@@ -132,8 +132,8 @@ Copy-Item -Path ..\packages.yml -Destination .\ -Force
 ```mermaid
 flowchart LR
     classDef cmd fill:#ff9900,stroke:#333,stroke-width:2px,color:#000,font-weight:bold;
-    classDef data fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef db fill:#c8e6c9,stroke:#388e3c,stroke-width:2px;
+    classDef data fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
+    classDef db fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000;
 
     %% 準備
     PKG[packages.yml] -->|1. dbt deps| MACROS[外部パッケージ]
